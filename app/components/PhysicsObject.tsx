@@ -56,10 +56,10 @@ export default function PhysicsObject({
     <RigidBody ref={rigidBodyRef} position={position}>
       <primitive object={clonedScene} scale={scale} />
       {/* Collision box - invisible but used for physics */}
-      <mesh ref={meshRef} visible={false}>
+      {/* <mesh ref={meshRef} visible={true}>
         <boxGeometry args={collisionBox} />
         <meshStandardMaterial color="white" />
-      </mesh>
+      </mesh> */}
     </RigidBody>
   );
 }
