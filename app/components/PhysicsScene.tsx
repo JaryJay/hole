@@ -20,6 +20,7 @@ const BUILDING_HEIGHT = 0.2; // Height for all buildings
 import Tree from "./Tree";
 import PineTree from "./PineTree";
 import LargeTree from "./LargeTree";
+import Goose from "./Goose";
 
 function Scene({
 	onGroundPositionChange,
