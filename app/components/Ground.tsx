@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
 import { RigidBody } from "@react-three/rapier";
 import { Mesh, Shape, ExtrudeGeometry } from "three";
+import { lerp } from "three/src/math/MathUtils.js";
 
 interface GroundProps {
   onPositionChange?: (position: [number, number, number]) => void;
@@ -52,22 +54,39 @@ export default function Ground({
     return [0, -2, 0]; // Default center position
   };
 
-  const [groundPosition, setGroundPosition] = useState<
+  const [targetPosition, setTargetPosition] = useState<
+    [number, number, number]
+  >(getInitialPosition());
+
+  const [actualPosition, setActualPosition] = useState<
     [number, number, number]
   >(getInitialPosition());
 
   // const colorMap = useLoader(TextureLoader, "grass.png");
 
-  // Update ground position when physical location changes
+  // Update target position when physical location changes
   useEffect(() => {
     if (physicalLocation) {
       const newPosition = gpsToWorldCoordinates(
         physicalLocation.lat,
         physicalLocation.lng
       );
-      setGroundPosition(newPosition);
+      setTargetPosition(newPosition);
     }
   }, [physicalLocation]);
+
+  // Smooth interpolation of ground position
+  useFrame(() => {
+    // Use faster lerp for larger distances, slower for small distances
+    const lerpFactor = 0.2;
+
+    const newActualPosition: [number, number, number] = [
+      lerp(actualPosition[0], targetPosition[0], lerpFactor),
+      lerp(actualPosition[1], targetPosition[1], lerpFactor),
+      lerp(actualPosition[2], targetPosition[2], lerpFactor),
+    ];
+    setActualPosition(newActualPosition);
+  });
 
   useEffect(() => {
     if (groundRef.current) {
@@ -104,13 +123,13 @@ export default function Ground({
     const handleKeyDown = (event: KeyboardEvent) => {
       const moveSpeed = 0.25;
       if (event.key === "ArrowUp") {
-        setGroundPosition(([x, y, z]) => [x, y, z - moveSpeed]);
+        setTargetPosition(([x, y, z]) => [x, y, z - moveSpeed]);
       } else if (event.key === "ArrowDown") {
-        setGroundPosition(([x, y, z]) => [x, y, z + moveSpeed]);
+        setTargetPosition(([x, y, z]) => [x, y, z + moveSpeed]);
       } else if (event.key === "ArrowLeft") {
-        setGroundPosition(([x, y, z]) => [x - moveSpeed, y, z]);
+        setTargetPosition(([x, y, z]) => [x - moveSpeed, y, z]);
       } else if (event.key === "ArrowRight") {
-        setGroundPosition(([x, y, z]) => [x + moveSpeed, y, z]);
+        setTargetPosition(([x, y, z]) => [x + moveSpeed, y, z]);
       }
     };
 
@@ -123,16 +142,16 @@ export default function Ground({
   // Notify parent component when ground position changes
   useEffect(() => {
     if (onPositionChange) {
-      onPositionChange(groundPosition);
+      onPositionChange(actualPosition);
     }
-  }, [groundPosition, onPositionChange]);
+  }, [actualPosition, onPositionChange]);
 
   return (
     <>
       {/* Visual ground with hole */}
       <mesh
         ref={groundRef}
-        position={groundPosition}
+        position={actualPosition}
         rotation={[-Math.PI / 2, 0, 0]}
       >
         <meshStandardMaterial color="lightgreen" />
@@ -143,9 +162,9 @@ export default function Ground({
       <RigidBody
         type="fixed"
         position={[
-          groundPosition[0] - (holeSize + 20),
-          groundPosition[1],
-          groundPosition[2],
+          actualPosition[0] - (holeSize + 20),
+          actualPosition[1],
+          actualPosition[2],
         ]}
       >
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -158,9 +177,9 @@ export default function Ground({
       <RigidBody
         type="fixed"
         position={[
-          groundPosition[0] + (holeSize + 20),
-          groundPosition[1],
-          groundPosition[2],
+          actualPosition[0] + (holeSize + 20),
+          actualPosition[1],
+          actualPosition[2],
         ]}
       >
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -173,9 +192,9 @@ export default function Ground({
       <RigidBody
         type="fixed"
         position={[
-          groundPosition[0],
-          groundPosition[1],
-          groundPosition[2] + (holeSize + 20),
+          actualPosition[0],
+          actualPosition[1],
+          actualPosition[2] + (holeSize + 20),
         ]}
       >
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -188,9 +207,9 @@ export default function Ground({
       <RigidBody
         type="fixed"
         position={[
-          groundPosition[0],
-          groundPosition[1],
-          groundPosition[2] - (holeSize + 20),
+          actualPosition[0],
+          actualPosition[1],
+          actualPosition[2] - (holeSize + 20),
         ]}
       >
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
