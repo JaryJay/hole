@@ -40,7 +40,12 @@ function Scene({
       />
       {/* Enhanced Lighting Setup */}
       <ambientLight intensity={0.4} />
-      <directionalLight position={[10, 10, 5]} intensity={0.8} castShadow />
+      <directionalLight
+        position={[10, 10, 5]}
+        intensity={1.8}
+        color="#FFF1B9"
+        castShadow
+      />
       <directionalLight position={[-10, 5, 5]} intensity={0.3} />
       <pointLight position={[0, 8, 0]} intensity={0.5} color="#ffaa44" />
 
