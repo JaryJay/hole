@@ -21,7 +21,7 @@ export default function PhysicsObject({
   modelPath,
   scale,
   collisionBox,
-  despawnThreshold = -52, // Default: ground Y (-2) minus 50 units
+  despawnThreshold = -22, // Default: ground Y (-2) minus 50 units
 }: PhysicsObjectProps) {
   const meshRef = useRef<Mesh>(null);
   const rigidBodyRef = useRef<RapierRigidBody>(null);
