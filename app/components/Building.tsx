@@ -59,7 +59,15 @@ export default function Building({
 	}
 
 	return (
-		<RigidBody type="dynamic" position={position}>
+		<RigidBody
+			type="dynamic"
+			position={position}
+			mass={10} // Heavy mass
+			restitution={0.1} // Low bounce
+			friction={0.8} // High friction
+			linearDamping={0.1} // Air resistance
+			angularDamping={0.1} // Angular resistance
+		>
 			<mesh ref={meshRef} geometry={buildingGeometry}>
 				<meshStandardMaterial color={color} />
 			</mesh>
