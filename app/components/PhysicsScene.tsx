@@ -71,12 +71,12 @@ export default function PhysicsScene() {
 
   // Calculate camera position from ground position with moderate zoom out based on hole size
   const baseHeight = 13;
-  const baseDistance = 3;
+  const baseDistance = 2;
   const zoomFactor = holeSize * 1.0; // Moderate zoom out factor (halfway between 0.5 and 1.5)
 
   const cameraOffset: [number, number, number] = [
     0,
-    baseHeight + zoomFactor, // Increase height as hole grows
+    baseHeight + zoomFactor * 0.5, // Increase height as hole grows
     baseDistance + zoomFactor * 1.0, // Moderate distance increase (halfway between 0.8 and 1.2)
   ];
   const cameraPosition: [number, number, number] = [
