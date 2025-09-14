@@ -28,7 +28,13 @@ function CameraController({
 	return null;
 }
 
-function Goose({ position }: { position: [number, number, number] }) {
+function Goose({
+	position,
+	onDespawn,
+}: {
+	position: [number, number, number];
+	onDespawn: () => void;
+}) {
 	const meshRef = useRef<Mesh>(null);
 	const rigidBodyRef = useRef<RapierRigidBody>(null);
 	const [isVisible, setIsVisible] = useState(true);
@@ -44,12 +50,13 @@ function Goose({ position }: { position: [number, number, number] }) {
 				// Remove the rigid body from the physics world and hide the mesh
 				rigidBodyRef.current.setEnabled(false);
 				setIsVisible(false);
+				onDespawn(); // Notify parent that goose despawned
 			}
 		};
 
 		const interval = setInterval(checkDespawn, 100); // Check every 100ms
 		return () => clearInterval(interval);
-	}, [isVisible]);
+	}, [isVisible, onDespawn]);
 
 	if (!isVisible) {
 		return null; // Don't render anything if the goose has despawned
@@ -69,10 +76,14 @@ function Scene({
 	onGroundPositionChange,
 	cameraPosition,
 	groundPosition,
+	holeSize,
+	onGooseDespawn,
 }: {
 	onGroundPositionChange: (position: [number, number, number]) => void;
 	cameraPosition: [number, number, number];
 	groundPosition: [number, number, number];
+	holeSize: number;
+	onGooseDespawn: () => void;
 }) {
 	return (
 		<>
@@ -84,13 +95,16 @@ function Scene({
 			<directionalLight position={[10, 10, 5]} intensity={1} />
 
 			{/* Ground plane */}
-			<Ground onPositionChange={onGroundPositionChange} />
+			<Ground
+				onPositionChange={onGroundPositionChange}
+				holeSize={holeSize}
+			/>
 
 			{/* Physics objects */}
-			<Goose position={[5, 5, 0]} />
-			<Goose position={[5, 8, 0]} />
-			<Goose position={[5, 6, 0]} />
-			<Goose position={[5, 10, 0]} />
+			<Goose position={[5, 5, 0]} onDespawn={onGooseDespawn} />
+			<Goose position={[5, 8, 0]} onDespawn={onGooseDespawn} />
+			<Goose position={[5, 6, 0]} onDespawn={onGooseDespawn} />
+			<Goose position={[5, 10, 0]} onDespawn={onGooseDespawn} />
 		</>
 	);
 }
@@ -99,6 +113,7 @@ export default function PhysicsScene() {
 	const [groundPosition, setGroundPosition] = useState<
 		[number, number, number]
 	>([0, -2, 0]);
+	const [holeSize, setHoleSize] = useState(2); // Initial hole radius
 
 	// Calculate camera position from ground position
 	const cameraOffset: [number, number, number] = [0, 13, 3];
@@ -112,6 +127,10 @@ export default function PhysicsScene() {
 		setGroundPosition(position);
 	};
 
+	const handleGooseDespawn = () => {
+		setHoleSize((prevSize) => prevSize + 0.2); // Increase hole size by 0.2 units
+	};
+
 	return (
 		<div className="w-full h-screen">
 			<Canvas camera={{ position: cameraPosition, fov: 60 }}>
@@ -120,6 +139,8 @@ export default function PhysicsScene() {
 						onGroundPositionChange={handleGroundPositionChange}
 						cameraPosition={cameraPosition}
 						groundPosition={groundPosition}
+						holeSize={holeSize}
+						onGooseDespawn={handleGooseDespawn}
 					/>
 				</Physics>
 			</Canvas>

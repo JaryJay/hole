@@ -6,9 +6,13 @@ import { Mesh, Shape, ExtrudeGeometry } from "three";
 
 interface GroundProps {
 	onPositionChange?: (position: [number, number, number]) => void;
+	holeSize?: number;
 }
 
-export default function Ground({ onPositionChange }: GroundProps) {
+export default function Ground({
+	onPositionChange,
+	holeSize = 2,
+}: GroundProps) {
 	const groundRef = useRef<Mesh>(null);
 	const [groundPosition, setGroundPosition] = useState<
 		[number, number, number]
@@ -18,7 +22,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 		if (groundRef.current) {
 			// Create a custom geometry with a hole
 			const groundShape = new Shape();
-			const holeRadius = 2;
+			const holeRadius = holeSize;
 			const groundSize = 20;
 
 			// Create outer rectangle
@@ -42,7 +46,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 			groundRef.current.geometry.dispose();
 			groundRef.current.geometry = geometry;
 		}
-	}, []);
+	}, [holeSize]);
 
 	// Arrow key controls for ground movement
 	useEffect(() => {
@@ -88,7 +92,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 			<RigidBody
 				type="fixed"
 				position={[
-					groundPosition[0] - 6,
+					groundPosition[0] - (holeSize + 4),
 					groundPosition[1],
 					groundPosition[2],
 				]}
@@ -107,7 +111,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 			<RigidBody
 				type="fixed"
 				position={[
-					groundPosition[0] + 6,
+					groundPosition[0] + (holeSize + 4),
 					groundPosition[1],
 					groundPosition[2],
 				]}
@@ -128,7 +132,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 				position={[
 					groundPosition[0],
 					groundPosition[1],
-					groundPosition[2] + 6,
+					groundPosition[2] + (holeSize + 4),
 				]}
 			>
 				<mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -147,7 +151,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 				position={[
 					groundPosition[0],
 					groundPosition[1],
-					groundPosition[2] - 6,
+					groundPosition[2] - (holeSize + 4),
 				]}
 			>
 				<mesh rotation={[-Math.PI / 2, 0, 0]}>
