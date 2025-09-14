@@ -51,7 +51,7 @@ export default function Home() {
         }
       },
       {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 1000,
       }
     );
