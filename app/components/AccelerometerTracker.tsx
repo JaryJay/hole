@@ -3,6 +3,19 @@
 import { useEffect, useState, useRef } from "react";
 import { useHybridLocationDispatch } from "@/contexts/HybridLocationContext";
 
+// Extended DeviceMotionEvent with permission request method
+interface DeviceMotionEventWithPermission extends DeviceMotionEvent {
+  requestPermission?: () => Promise<PermissionState>;
+}
+
+// Extended DeviceOrientationEvent with permission request method
+interface DeviceOrientationEventWithPermission extends DeviceOrientationEvent {
+  requestPermission?: () => Promise<PermissionState>;
+}
+
+// Permission state type
+type PermissionState = "granted" | "denied" | "prompt";
+
 interface AccelerometerData {
   x: number;
   y: number;
@@ -200,26 +213,24 @@ export default function AccelerometerTracker() {
     // Request permission for iOS 13+ devices
     const requestPermissions = async () => {
       try {
-        let motionPermission = "granted";
-        let orientationPermission = "granted";
+        let motionPermission: PermissionState = "granted";
+        let orientationPermission: PermissionState = "granted";
 
         // Request motion permission
-        if (
-          typeof (DeviceMotionEvent as any).requestPermission === "function"
-        ) {
-          motionPermission = await (
-            DeviceMotionEvent as any
-          ).requestPermission();
+        const DeviceMotionEventClass =
+          DeviceMotionEvent as unknown as DeviceMotionEventWithPermission;
+        if (typeof DeviceMotionEventClass.requestPermission === "function") {
+          motionPermission = await DeviceMotionEventClass.requestPermission();
         }
 
         // Request orientation permission
+        const DeviceOrientationEventClass =
+          DeviceOrientationEvent as unknown as DeviceOrientationEventWithPermission;
         if (
-          typeof (DeviceOrientationEvent as any).requestPermission ===
-          "function"
+          typeof DeviceOrientationEventClass.requestPermission === "function"
         ) {
-          orientationPermission = await (
-            DeviceOrientationEvent as any
-          ).requestPermission();
+          orientationPermission =
+            await DeviceOrientationEventClass.requestPermission();
         }
 
         if (
