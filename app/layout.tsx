@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { LocationProvider } from "@/contexts/LocationContext";
 import "./globals.css";
+import { LocationProvider } from "@/contexts/LocationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,14 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <LocationProvider>
+    <LocationProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           {children}
-        </LocationProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </LocationProvider>
   );
 }
