@@ -9,8 +9,8 @@ function Box({ position }: { position: [number, number, number] }) {
   const meshRef = useRef<Mesh>(null);
 
   return (
-    <RigidBody position={position} ref={meshRef}>
-      <mesh>
+    <RigidBody position={position}>
+      <mesh ref={meshRef}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="orange" />
       </mesh>
