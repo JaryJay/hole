@@ -20,7 +20,7 @@ function gpsToWorldCoordinates(
   lat: number,
   lng: number
 ): [number, number, number] {
-  const scale = 22000; // Adjust this to control how much the location affects position
+  const scale = 111000; // Adjust this to control how much the location affects position
 
   // Convert to world coordinates (x, z) - y stays at ground level
   const x = (lng + 80.584166) * scale;
