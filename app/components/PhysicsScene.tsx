@@ -4,6 +4,8 @@ import { Canvas } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import { Mesh } from "three";
+import { useFrame } from "@react-three/fiber";
+import { RapierRigidBody } from "@react-three/rapier";
 
 function Goose({ position }: { position: [number, number, number] }) {
   const meshRef = useRef<Mesh>(null);
@@ -13,6 +15,101 @@ function Goose({ position }: { position: [number, number, number] }) {
       <mesh ref={meshRef}>
         <boxGeometry args={[1, 1, 0.6]} />
         <meshStandardMaterial color="orange" />
+      </mesh>
+    </RigidBody>
+  );
+}
+
+function ControllableGoose({
+  position,
+}: {
+  position: [number, number, number];
+}) {
+  const meshRef = useRef<Mesh>(null);
+  const rigidBodyRef = useRef<RapierRigidBody>(null);
+  const keys = useRef({
+    w: false,
+    a: false,
+    s: false,
+    d: false,
+  });
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key.toLowerCase()) {
+        case "w":
+          keys.current.w = true;
+          break;
+        case "a":
+          keys.current.a = true;
+          break;
+        case "s":
+          keys.current.s = true;
+          break;
+        case "d":
+          keys.current.d = true;
+          break;
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      switch (event.key.toLowerCase()) {
+        case "w":
+          keys.current.w = false;
+          break;
+        case "a":
+          keys.current.a = false;
+          break;
+        case "s":
+          keys.current.s = false;
+          break;
+        case "d":
+          keys.current.d = false;
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  useFrame(() => {
+    if (rigidBodyRef.current) {
+      const moveSpeed = 0.1;
+      const currentPosition = rigidBodyRef.current.translation();
+      let newX = currentPosition.x;
+      let newZ = currentPosition.z;
+
+      if (keys.current.w) newZ -= moveSpeed; // Move forward
+      if (keys.current.s) newZ += moveSpeed; // Move backward
+      if (keys.current.a) newX -= moveSpeed; // Move left
+      if (keys.current.d) newX += moveSpeed; // Move right
+
+      // Set the position directly
+      if (
+        keys.current.w ||
+        keys.current.s ||
+        keys.current.a ||
+        keys.current.d
+      ) {
+        rigidBodyRef.current.setTranslation(
+          { x: newX, y: currentPosition.y, z: newZ },
+          true
+        );
+      }
+    }
+  });
+
+  return (
+    <RigidBody ref={rigidBodyRef} position={position}>
+      <mesh ref={meshRef}>
+        <boxGeometry args={[1, 1, 0.6]} />
+        <meshStandardMaterial color="red" />
       </mesh>
     </RigidBody>
   );
@@ -39,7 +136,7 @@ function Scene() {
       <Ground />
 
       {/* Physics objects */}
-      <Goose position={[0, 5, 0]} />
+      <ControllableGoose position={[0, 5, 0]} />
       <Goose position={[1, 8, 0]} />
       <Goose position={[-1, 6, 0]} />
       <Goose position={[0, 10, 0]} />
@@ -48,32 +145,9 @@ function Scene() {
 }
 
 export default function PhysicsScene() {
-  const [cameraPosition, setCameraPosition] = useState<
-    [number, number, number]
-  >([0, 11, 3]);
-  useEffect(() => {
-    // Move the camera when wasd is pressed
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "w") {
-        setCameraPosition(([x, y, z]) => [x, y, z + 0.8]);
-      } else if (event.key === "s") {
-        setCameraPosition(([x, y, z]) => [x, y, z - 0.8]);
-      } else if (event.key === "a") {
-        setCameraPosition(([x, y, z]) => [x - 0.8, y, z]);
-      } else if (event.key === "d") {
-        setCameraPosition(([x, y, z]) => [x + 0.8, y, z]);
-      }
-      console.log({ cameraPosition, eventKey: event.key });
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   return (
     <div className="w-full h-screen">
-      <Canvas camera={{ position: cameraPosition, fov: 60 }}>
+      <Canvas camera={{ position: [0, 11, 3], fov: 60 }}>
         <Physics gravity={[0, -9.81, 0]}>
           <Scene />
         </Physics>
