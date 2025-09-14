@@ -52,13 +52,13 @@ function Scene({
 			/>
 
 			{/* Physics objects */}
-			{/* <Goose position={[5, 5, 0]} onDespawn={onObjectDespawn} />
+			<Goose position={[5, 5, 0]} onDespawn={onObjectDespawn} />
 			<Goose position={[5, 8, 0]} onDespawn={onObjectDespawn} />
 			<Goose position={[5, 6, 0]} onDespawn={onObjectDespawn} />
 			<Goose position={[5, 10, 0]} onDespawn={onObjectDespawn} />
 
 			<Tree position={[-2, 0, -5]} onDespawn={onObjectDespawn} />
-			<Tree position={[1, 0, -5]} onDespawn={onObjectDespawn} /> */}
+			<Tree position={[1, 0, -5]} onDespawn={onObjectDespawn} />
 
 			{/* Test building to verify Building component works */}
 
