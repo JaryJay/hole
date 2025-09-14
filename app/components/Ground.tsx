@@ -51,6 +51,10 @@ export default function Ground({
   const [actualPosition, setActualPosition] = useState<
     [number, number, number]
   >(getInitialPosition());
+  
+  const [lastNotifiedPosition, setLastNotifiedPosition] = useState<
+    [number, number, number]
+  >(getInitialPosition());
 
   // const colorMap = useLoader(TextureLoader, "grass.png");
 
@@ -75,7 +79,16 @@ export default function Ground({
       lerp(actualPosition[1], targetPosition[1], lerpFactor),
       lerp(actualPosition[2], targetPosition[2], lerpFactor),
     ];
-    setActualPosition(newActualPosition);
+    
+    // Only update position if it changed significantly (to avoid constant updates)
+    const positionDelta = Math.sqrt(
+      Math.pow(newActualPosition[0] - actualPosition[0], 2) +
+      Math.pow(newActualPosition[2] - actualPosition[2], 2)
+    );
+    
+    if (positionDelta > 0.01) { // Only update if moved more than 0.01 units
+      setActualPosition(newActualPosition);
+    }
   });
 
   useEffect(() => {
@@ -129,12 +142,21 @@ export default function Ground({
     };
   }, []);
 
-  // Notify parent component when ground position changes
+  // Notify parent component when ground position changes significantly
   useEffect(() => {
     if (onPositionChange) {
-      onPositionChange(actualPosition);
+      const positionDelta = Math.sqrt(
+        Math.pow(actualPosition[0] - lastNotifiedPosition[0], 2) +
+        Math.pow(actualPosition[2] - lastNotifiedPosition[2], 2)
+      );
+      
+      // Only notify if position changed by more than 0.1 units
+      if (positionDelta > 0.1) {
+        onPositionChange(actualPosition);
+        setLastNotifiedPosition(actualPosition);
+      }
     }
-  }, [actualPosition, onPositionChange]);
+  }, [actualPosition, onPositionChange, lastNotifiedPosition]);
 
   return (
     <>
