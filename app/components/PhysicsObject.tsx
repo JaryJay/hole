@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Mesh } from "three";
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { playSound } from "../utils/sound";
 
 interface PhysicsObjectProps {
   position: [number, number, number];
@@ -40,6 +41,12 @@ export default function PhysicsObject({
         // Remove the rigid body from the physics world and hide the mesh
         rigidBodyRef.current.setEnabled(false);
         setIsVisible(false);
+        
+        // Play sound if this is a goose
+        if (modelPath.includes('Goose')) {
+          playSound('/audio/geese.mp3', 0.5);
+        }
+        
         onDespawn(); // Notify parent that object despawned
       }
     };
