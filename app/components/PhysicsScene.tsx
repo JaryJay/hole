@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { Physics, RigidBody } from "@react-three/rapier";
+import { Physics, RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import { Mesh } from "three";
 import Ground from "./Ground";
@@ -30,9 +30,33 @@ function CameraController({
 
 function Goose({ position }: { position: [number, number, number] }) {
 	const meshRef = useRef<Mesh>(null);
+	const rigidBodyRef = useRef<RapierRigidBody>(null);
+	const [isVisible, setIsVisible] = useState(true);
+
+	useEffect(() => {
+		const checkDespawn = () => {
+			if (!rigidBodyRef.current || !isVisible) return;
+
+			const currentPosition = rigidBodyRef.current.translation();
+			const despawnThreshold = -2 - 100; // Ground Y position (-2) minus 10 units
+
+			if (currentPosition.y < despawnThreshold) {
+				// Remove the rigid body from the physics world and hide the mesh
+				rigidBodyRef.current.setEnabled(false);
+				setIsVisible(false);
+			}
+		};
+
+		const interval = setInterval(checkDespawn, 100); // Check every 100ms
+		return () => clearInterval(interval);
+	}, [isVisible]);
+
+	if (!isVisible) {
+		return null; // Don't render anything if the goose has despawned
+	}
 
 	return (
-		<RigidBody position={position}>
+		<RigidBody ref={rigidBodyRef} position={position}>
 			<mesh ref={meshRef}>
 				<boxGeometry args={[1, 1, 0.6]} />
 				<meshStandardMaterial color="orange" />
