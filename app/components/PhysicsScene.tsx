@@ -10,12 +10,8 @@ import {
   type LocationContextType,
 } from "@/contexts/LocationContext";
 
-const INITIAL_HOLE_SIZE = 2; // Initial hole size (matching Ground component)
-import Tree from "./Tree";
-import PineTree from "./PineTree";
-import LargeTree from "./LargeTree";
-import Goose from "./Goose";
-import VillageHouse from "./VillageHouse";
+const INITIAL_HOLE_SIZE = 0.5; // Initial hole size - start small
+import ObjectSpawner from "./ObjectSpawner";
 
 function Scene({
   onGroundPositionChange,
@@ -56,89 +52,12 @@ function Scene({
         physicalLocation={physicalLocation}
       />
 
-      {/* Beautiful Nature Scene Setup */}
-
-      {/* Forest Border - Large Trees forming a natural boundary */}
-      <LargeTree position={[-18, 2, -12]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-15, 2, -15]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-12, 2, -18]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-9, 2, -21]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-6, 2, -24]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[18, 2, -12]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[15, 2, -15]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[12, 2, -18]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[9, 2, -21]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[6, 2, -24]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-18, 2, 12]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-15, 2, 15]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-12, 2, 18]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-9, 2, 21]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[-6, 2, 24]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[18, 2, 12]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[15, 2, 15]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[12, 2, 18]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[9, 2, 21]} onDespawn={onObjectDespawn} />
-      <LargeTree position={[6, 2, 24]} onDespawn={onObjectDespawn} />
-
-      {/* Pine Forest Area - Northwest */}
-      <PineTree position={[-12, 2, -9]} onDespawn={onObjectDespawn} />
-      <PineTree position={[-15, 2, -6]} onDespawn={onObjectDespawn} />
-      <PineTree position={[-9, 2, -12]} onDespawn={onObjectDespawn} />
-      <PineTree position={[-6, 2, -15]} onDespawn={onObjectDespawn} />
-
-      {/* Pine Forest Area - Southeast */}
-      <PineTree position={[12, 2, 9]} onDespawn={onObjectDespawn} />
-      <PineTree position={[15, 2, 6]} onDespawn={onObjectDespawn} />
-      <PineTree position={[9, 2, 12]} onDespawn={onObjectDespawn} />
-      <PineTree position={[6, 2, 15]} onDespawn={onObjectDespawn} />
-
-      {/* Mixed Tree Grove - Southwest */}
-      <Tree position={[-9, 2, 6]} onDespawn={onObjectDespawn} />
-      <Tree position={[-6, 2, 9]} onDespawn={onObjectDespawn} />
-      <Tree position={[-12, 2, 3]} onDespawn={onObjectDespawn} />
-      <PineTree position={[-3, 2, 12]} onDespawn={onObjectDespawn} />
-
-      {/* Mixed Tree Grove - Northeast */}
-      <Tree position={[9, 2, -6]} onDespawn={onObjectDespawn} />
-      <Tree position={[6, 2, -9]} onDespawn={onObjectDespawn} />
-      <Tree position={[12, 2, -3]} onDespawn={onObjectDespawn} />
-      <PineTree position={[3, 2, -12]} onDespawn={onObjectDespawn} />
-
-      {/* Village Settlement - Central area with houses */}
-      <VillageHouse position={[-6, 3, 2]} onDespawn={onObjectDespawn} />
-      <VillageHouse position={[6, 3, 2]} onDespawn={onObjectDespawn} />
-      <VillageHouse position={[0, 3, -4]} onDespawn={onObjectDespawn} />
-      <VillageHouse position={[-3, 3, 6]} onDespawn={onObjectDespawn} />
-      <VillageHouse position={[3, 3, 6]} onDespawn={onObjectDespawn} />
-
-      {/* Natural Goose Flocks - Scattered around the scene */}
-      {/* Main flock near village */}
-      <Goose position={[4, 8, 4]} onDespawn={onObjectDespawn} />
-      <Goose position={[2, 8, 3]} onDespawn={onObjectDespawn} />
-      <Goose position={[-2, 8, -2]} onDespawn={onObjectDespawn} />
-      <Goose position={[-1.5, 8, 3]} onDespawn={onObjectDespawn} />
-
-      {/* Flock near northwest forest */}
-      <Goose position={[-9, 8, -3]} onDespawn={onObjectDespawn} />
-      <Goose position={[-12, 8, 0]} onDespawn={onObjectDespawn} />
-      <Goose position={[-6, 8, -6]} onDespawn={onObjectDespawn} />
-
-      {/* Flock near southeast forest */}
-      <Goose position={[9, 8, 3]} onDespawn={onObjectDespawn} />
-      <Goose position={[12, 8, 0]} onDespawn={onObjectDespawn} />
-      <Goose position={[6, 8, 6]} onDespawn={onObjectDespawn} />
-
-      {/* Lone geese in distant areas */}
-      <Goose position={[-15, 8, -1]} onDespawn={onObjectDespawn} />
-      <Goose position={[15, 8, -1]} onDespawn={onObjectDespawn} />
-      <Goose position={[-1, 8, -12]} onDespawn={onObjectDespawn} />
-      <Goose position={[1, 8, 12]} onDespawn={onObjectDespawn} />
-
-      {/* Additional scattered geese for more coverage */}
-      <Goose position={[-6, 8, -9]} onDespawn={onObjectDespawn} />
-      <Goose position={[6, 8, -9]} onDespawn={onObjectDespawn} />
-      <Goose position={[-9, 8, 6]} onDespawn={onObjectDespawn} />
-      <Goose position={[9, 8, -6]} onDespawn={onObjectDespawn} />
+      {/* Dynamic Object Spawning System */}
+      <ObjectSpawner 
+        holeSize={holeSize} 
+        playerPosition={groundPosition}
+        onObjectDespawn={onObjectDespawn} 
+      />
     </>
   );
 }
