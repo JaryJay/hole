@@ -12,7 +12,7 @@ interface GroundProps {
   physicalLocation?: { lat: number; lng: number } | null;
 }
 
-const GROUND_SIZE = 200; // Ground plane size (10x bigger than before)
+const GROUND_SIZE = 1000; // Ground plane size (50x bigger than before)
 const INITIAL_HOLE_SIZE = 0.2; // Initial hole size
 
 // Convert GPS coordinates to 3D world coordinates
