@@ -1,10 +1,32 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState } from "react";
 import { Mesh } from "three";
 import Ground from "./Ground";
+
+function CameraController({
+	cameraPosition,
+	groundPosition,
+}: {
+	cameraPosition: [number, number, number];
+	groundPosition: [number, number, number];
+}) {
+	const { camera } = useThree();
+
+	useEffect(() => {
+		camera.position.set(
+			cameraPosition[0],
+			cameraPosition[1],
+			cameraPosition[2]
+		);
+		camera.lookAt(groundPosition[0], groundPosition[1], groundPosition[2]);
+		camera.updateProjectionMatrix();
+	}, [camera, cameraPosition, groundPosition]);
+
+	return null;
+}
 
 function Goose({ position }: { position: [number, number, number] }) {
 	const meshRef = useRef<Mesh>(null);
@@ -21,11 +43,19 @@ function Goose({ position }: { position: [number, number, number] }) {
 
 function Scene({
 	onGroundPositionChange,
+	cameraPosition,
+	groundPosition,
 }: {
 	onGroundPositionChange: (position: [number, number, number]) => void;
+	cameraPosition: [number, number, number];
+	groundPosition: [number, number, number];
 }) {
 	return (
 		<>
+			<CameraController
+				cameraPosition={cameraPosition}
+				groundPosition={groundPosition}
+			/>
 			<ambientLight intensity={0.5} />
 			<directionalLight position={[10, 10, 5]} intensity={1} />
 
@@ -42,23 +72,17 @@ function Scene({
 }
 
 export default function PhysicsScene() {
-	const [cameraPosition, setCameraPosition] = useState<
-		[number, number, number]
-	>([0, 11, 3]);
 	const [groundPosition, setGroundPosition] = useState<
 		[number, number, number]
 	>([0, -2, 0]);
 
-	// Update camera position to follow the ground
-	useEffect(() => {
-		// Keep the camera at a fixed offset relative to the ground
-		const cameraOffset: [number, number, number] = [0, 13, 3];
-		setCameraPosition([
-			groundPosition[0] + cameraOffset[0],
-			groundPosition[1] + cameraOffset[1],
-			groundPosition[2] + cameraOffset[2],
-		]);
-	}, [groundPosition]);
+	// Calculate camera position from ground position
+	const cameraOffset: [number, number, number] = [0, 13, 3];
+	const cameraPosition: [number, number, number] = [
+		groundPosition[0] + cameraOffset[0],
+		groundPosition[1] + cameraOffset[1],
+		groundPosition[2] + cameraOffset[2],
+	];
 
 	const handleGroundPositionChange = (position: [number, number, number]) => {
 		setGroundPosition(position);
@@ -70,6 +94,8 @@ export default function PhysicsScene() {
 				<Physics gravity={[0, -9.81, 0]}>
 					<Scene
 						onGroundPositionChange={handleGroundPositionChange}
+						cameraPosition={cameraPosition}
+						groundPosition={groundPosition}
 					/>
 				</Physics>
 			</Canvas>
