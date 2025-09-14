@@ -10,7 +10,7 @@ import {
   type LocationContextType,
 } from "@/contexts/LocationContext";
 
-const INITIAL_HOLE_SIZE = 0.5; // Initial hole size - start small
+const INITIAL_HOLE_SIZE = 0.6; // Initial hole size - start small
 import ObjectSpawner from "./ObjectSpawner";
 
 function Scene({
