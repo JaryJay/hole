@@ -61,14 +61,14 @@ export default function LocationCard({ className = "" }: LocationCardProps) {
 					<div className="flex items-center gap-2">
 						<span
 							className={`text-sm font-medium ${getStatusColor(
-								location?.locationStatus
+								location?.locationStatus || "unknown"
 							)}`}
 						>
-							{getStatusIcon(location?.locationStatus)}
+67 | 							{getStatusIcon(location?.locationStatus || "unknown")}
 						</span>
 						<span
 							className={`text-sm font-medium ${getStatusColor(
-								location?.locationStatus
+								location?.locationStatus || "unknown"
 							)}`}
 						>
 							{location?.locationStatus || "unknown"}
