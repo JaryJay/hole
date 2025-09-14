@@ -2,19 +2,19 @@
 
 import PhysicsObject from "./PhysicsObject";
 
-interface GooseProps {
+interface TreeProps {
   position: [number, number, number];
   onDespawn: () => void;
 }
 
-export default function Goose({ position, onDespawn }: GooseProps) {
+export default function Tree({ position, onDespawn }: TreeProps) {
   return (
     <PhysicsObject
       position={position}
       onDespawn={onDespawn}
-      modelPath="/3d_models/Goose.glb"
-      scale={0.02}
-      collisionBox={[1, 1, 0.6]}
+      modelPath="/3d_models/Tree.glb"
+      scale={2}
+      collisionBox={[2, 12, 2]}
     />
   );
 }

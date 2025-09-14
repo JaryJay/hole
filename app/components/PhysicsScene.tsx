@@ -6,19 +6,20 @@ import { useState } from "react";
 import Ground from "./Ground";
 import CameraController from "./CameraController";
 import Goose from "./Goose";
+import Tree from "./Tree";
 
 function Scene({
   onGroundPositionChange,
   cameraPosition,
   groundPosition,
   holeSize,
-  onGooseDespawn,
+  onObjectDespawn,
 }: {
   onGroundPositionChange: (position: [number, number, number]) => void;
   cameraPosition: [number, number, number];
   groundPosition: [number, number, number];
   holeSize: number;
-  onGooseDespawn: () => void;
+  onObjectDespawn: () => void;
 }) {
   return (
     <>
@@ -33,10 +34,13 @@ function Scene({
       <Ground onPositionChange={onGroundPositionChange} holeSize={holeSize} />
 
       {/* Physics objects */}
-      <Goose position={[5, 5, 0]} onDespawn={onGooseDespawn} />
-      <Goose position={[5, 8, 0]} onDespawn={onGooseDespawn} />
-      <Goose position={[5, 6, 0]} onDespawn={onGooseDespawn} />
-      <Goose position={[5, 10, 0]} onDespawn={onGooseDespawn} />
+      <Goose position={[5, 5, 0]} onDespawn={onObjectDespawn} />
+      <Goose position={[5, 8, 0]} onDespawn={onObjectDespawn} />
+      <Goose position={[5, 6, 0]} onDespawn={onObjectDespawn} />
+      <Goose position={[5, 10, 0]} onDespawn={onObjectDespawn} />
+
+      <Tree position={[-2, 0, -5]} onDespawn={onObjectDespawn} />
+      <Tree position={[1, 0, -5]} onDespawn={onObjectDespawn} />
     </>
   );
 }
@@ -59,7 +63,7 @@ export default function PhysicsScene() {
     setGroundPosition(position);
   };
 
-  const handleGooseDespawn = () => {
+  const onObjectDespawn = () => {
     setHoleSize((prevSize) => prevSize + 0.2); // Increase hole size by 0.2 units
   };
 
@@ -72,7 +76,7 @@ export default function PhysicsScene() {
             cameraPosition={cameraPosition}
             groundPosition={groundPosition}
             holeSize={holeSize}
-            onGooseDespawn={handleGooseDespawn}
+            onObjectDespawn={onObjectDespawn}
           />
         </Physics>
       </Canvas>
