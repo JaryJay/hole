@@ -3,7 +3,7 @@
 import { RigidBody, RapierRigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Mesh } from "three";
-import { useLoader } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface PhysicsObjectProps {
@@ -30,7 +30,7 @@ export default function PhysicsObject({
 
   const clonedScene = useMemo(() => obj.scene.clone(), [obj]);
 
-  useEffect(() => {
+  useFrame(() => {
     const checkDespawn = () => {
       if (!rigidBodyRef.current || !isVisible) return;
 
@@ -40,13 +40,12 @@ export default function PhysicsObject({
         // Remove the rigid body from the physics world and hide the mesh
         rigidBodyRef.current.setEnabled(false);
         setIsVisible(false);
+        console.log("Despawning");
         onDespawn(); // Notify parent that object despawned
       }
     };
-
-    const interval = setInterval(checkDespawn, 100); // Check every 100ms
-    return () => clearInterval(interval);
-  }, [isVisible, onDespawn, despawnThreshold]);
+    checkDespawn();
+  });
 
   if (!isVisible) {
     return null; // Don't render anything if the object has despawned

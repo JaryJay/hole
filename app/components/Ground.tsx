@@ -26,16 +26,6 @@ function gpsToWorldCoordinates(
   const x = (lng + 80.5) * scale;
   const z = (lat - 43.5) * scale;
 
-  console.log(
-    "Converted GPS coordinates to world coordinates:",
-    [x, z],
-    "lat",
-    lat,
-    "lng",
-    lng
-  );
-  console.log({ lat, lng, x, z });
-
   return [x, -2, z]; // y is -2 for ground level
 }
 

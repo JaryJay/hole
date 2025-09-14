@@ -15,6 +15,7 @@ export default function Tree({ position, onDespawn }: TreeProps) {
       modelPath="/3d_models/LargeTree.glb"
       scale={1.7}
       collisionBox={[4, 13, 4]}
+      despawnThreshold={-33}
     />
   );
 }
