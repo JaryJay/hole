@@ -6,9 +6,9 @@ import { useState } from "react";
 import Ground from "./Ground";
 import CameraController from "./CameraController";
 import {
-  useLocation,
-  type LocationContextType,
-} from "@/contexts/LocationContext";
+  useHybridLocation,
+  type HybridLocationContextType,
+} from "@/contexts/HybridLocationContext";
 
 const INITIAL_HOLE_SIZE = 2; // Initial hole size (matching Ground component)
 import Tree from "./Tree";
@@ -144,7 +144,8 @@ function Scene({
 }
 
 export default function PhysicsScene() {
-  const locationData: LocationContextType | undefined = useLocation();
+  const locationData: HybridLocationContextType | undefined =
+    useHybridLocation();
   const [groundPosition, setGroundPosition] = useState<
     [number, number, number]
   >([0, -2, 0]);

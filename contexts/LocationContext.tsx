@@ -5,6 +5,8 @@ import { createContext, ReactNode, useContext, useReducer } from "react";
 type GeolocationPosition = {
   lat: number;
   lng: number;
+  accuracy?: number;
+  timestamp?: number;
 };
 
 type LocationStatus = "accessed" | "denied" | "unknown" | "error";
