@@ -113,10 +113,10 @@ function Scene({
 
       {/* Natural Goose Flocks - Scattered around the scene */}
       {/* Main flock near village */}
-      <Goose position={[0, 8, 0]} onDespawn={onObjectDespawn} />
-      <Goose position={[2, 8, 1]} onDespawn={onObjectDespawn} />
-      <Goose position={[-2, 8, 1]} onDespawn={onObjectDespawn} />
-      <Goose position={[0, 8, 3]} onDespawn={onObjectDespawn} />
+      <Goose position={[4, 8, 4]} onDespawn={onObjectDespawn} />
+      <Goose position={[2, 8, 3]} onDespawn={onObjectDespawn} />
+      <Goose position={[-2, 8, -2]} onDespawn={onObjectDespawn} />
+      <Goose position={[-1.5, 8, 3]} onDespawn={onObjectDespawn} />
 
       {/* Flock near northwest forest */}
       <Goose position={[-9, 8, -3]} onDespawn={onObjectDespawn} />
