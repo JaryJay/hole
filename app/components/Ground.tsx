@@ -47,7 +47,7 @@ export default function Ground({ onPositionChange }: GroundProps) {
 	// Arrow key controls for ground movement
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
-			const moveSpeed = 0.5;
+			const moveSpeed = 0.25;
 			if (event.key === "ArrowUp") {
 				setGroundPosition(([x, y, z]) => [x, y, z - moveSpeed]);
 			} else if (event.key === "ArrowDown") {

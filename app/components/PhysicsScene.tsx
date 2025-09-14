@@ -63,10 +63,10 @@ function Scene({
 			<Ground onPositionChange={onGroundPositionChange} />
 
 			{/* Physics objects */}
-			<Goose position={[10, 5, 0]} />
-			<Goose position={[11, 8, 0]} />
-			<Goose position={[11, 6, 0]} />
-			<Goose position={[10, 10, 0]} />
+			<Goose position={[5, 5, 0]} />
+			<Goose position={[5, 8, 0]} />
+			<Goose position={[5, 6, 0]} />
+			<Goose position={[5, 10, 0]} />
 		</>
 	);
 }
