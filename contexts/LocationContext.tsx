@@ -9,7 +9,7 @@ type GeolocationPosition = {
 
 type LocationStatus = "accessed" | "denied" | "unknown" | "error";
 
-interface LocationContextType {
+export interface LocationContextType {
   locationStatus: LocationStatus;
   position: GeolocationPosition | null;
 }
@@ -30,11 +30,11 @@ export function LocationProvider({ children }: LocationProviderProps) {
   const [location, dispatch] = useReducer(locationReducer, initialLocation);
 
   return (
-    <LocationContext value={location}>
-      <LocationDispatchContext value={dispatch}>
+    <LocationContext.Provider value={location}>
+      <LocationDispatchContext.Provider value={dispatch}>
         {children}
-      </LocationDispatchContext>
-    </LocationContext>
+      </LocationDispatchContext.Provider>
+    </LocationContext.Provider>
   );
 }
 
